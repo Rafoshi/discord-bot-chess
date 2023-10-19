@@ -56,7 +56,7 @@ func main() {
 			country := strings.TrimPrefix(player.Country, "https://api.chess.com/pub/country/")
 
 			footer := discordgo.MessageEmbedFooter{
-				Text: fmt.Sprintf("Rating: %d", player.Followers),
+				Text: fmt.Sprintf("Seguidores: %d", player.Followers),
 			}
 
 			embed := discordgo.MessageEmbed{
