@@ -22,7 +22,6 @@ type Player struct {
 	Followers int    `json:"followers"`
 	Country   string `json:"country"`
 	League    string `json:"league"`
-	Fide 	  int    `json:fide`
 }
 
 const prefix string = "chess"
@@ -57,7 +56,7 @@ func main() {
 			country := strings.TrimPrefix(player.Country, "https://api.chess.com/pub/country/")
 
 			footer := discordgo.MessageEmbedFooter{
-				Text: fmt.Sprintf("Rating: %d", player.Fide),
+				Text: fmt.Sprintf("Rating: %d", player.Followers),
 			}
 
 			embed := discordgo.MessageEmbed{
