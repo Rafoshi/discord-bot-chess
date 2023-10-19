@@ -39,7 +39,7 @@ func main() {
 		args := strings.Split(m.Content, " ")
 
 		if args[0] != prefix || len(args) < 2 {
-            printHelp(s , m)
+			printHelp(s, m)
 			return
 		}
 
@@ -71,8 +71,6 @@ func main() {
 			s.ChannelMessageSendEmbed(m.ChannelID, &embed)
 		} else if args[1] == "help" {
 			s.ChannelMessageSend(m.ChannelID, "Comandos: \n ```chess user <username>``` ```chess help```")
-		} else {
-            printHelp(s , m)
 		}
 	})
 
