@@ -39,7 +39,6 @@ func main() {
 		args := strings.Split(m.Content, " ")
 
 		if args[0] != prefix || len(args) < 2 {
-			printHelp(s, m)
 			return
 		}
 
