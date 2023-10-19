@@ -70,6 +70,8 @@ func main() {
 			s.ChannelMessageSendEmbed(m.ChannelID, &embed)
 		} else if args[1] == "help" {
 			s.ChannelMessageSend(m.ChannelID, "Comandos: \n ```chess user <username>``` ```chess help```")
+		} else {
+            printHelp(s , m)
 		}
 	})
 
