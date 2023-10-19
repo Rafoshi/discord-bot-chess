@@ -27,7 +27,7 @@ type Player struct {
 const prefix string = "chess"
 
 func main() {
-	session, err := discordgo.New("Bot " + "MTE2NDI5NzA5MTgzNzg3NDM1Ng.Gz0bAr.WNGZsbj5IYqR92dJrloekpxyaf-L-E7fx5n93w")
+	session, err := discordgo.New("Bot " + os.Getenv("DISCORD_TOKEN"))
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -39,13 +39,40 @@ func main() {
 		args := strings.Split(m.Content, " ")
 
 		if args[0] != prefix || len(args) < 2 {
+            printHelp(s , m)
 			return
 		}
 
 		if args[1] == "user" {
-            player := printNames(args[2])
-            message := fmt.Sprintf("Nome: %s\nLiga: %s\nPaís: %s", player.Name, player.League, player.Country)
-			s.ChannelMessageSend(m.ChannelID, message)
+			player := printNames(args[2])
+			author := discordgo.MessageEmbedAuthor{
+				Name: player.Name,
+				URL:  player.URL,
+			}
+
+			image := discordgo.MessageEmbedImage{
+				URL: player.Avatar,
+			}
+
+			country := strings.TrimPrefix(player.Country, "https://api.chess.com/pub/country/")
+
+			footer := discordgo.MessageEmbedFooter{
+				Text: fmt.Sprintf("Seguidores: %d", player.Followers),
+			}
+
+			embed := discordgo.MessageEmbed{
+				Title:       player.League,
+				Description: country,
+				Footer:      &footer,
+				Author:      &author,
+				Image:       &image,
+			}
+
+			s.ChannelMessageSendEmbed(m.ChannelID, &embed)
+		} else if args[1] == "help" {
+			s.ChannelMessageSend(m.ChannelID, "Comandos: \n ```chess user <username>``` ```chess help```")
+		} else {
+            printHelp(s , m)
 		}
 	})
 
@@ -55,12 +82,18 @@ func main() {
 		log.Fatal(err)
 	}
 	defer session.Close()
+
 	fmt.Print("Bot is running")
 
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
-	<-sc
-	//printNames()
+	defer func() {
+		sc := make(chan os.Signal, 1)
+		signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
+		<-sc
+	}()
+}
+
+func printHelp(s *discordgo.Session, m *discordgo.MessageCreate) {
+	s.ChannelMessageSend(m.ChannelID, "Use ```chess help``` para ver os comandos")
 }
 
 func printNames(playername string) Player {
@@ -82,7 +115,6 @@ func printNames(playername string) Player {
 	}
 
 	var player Player
-
 	err = json.Unmarshal(body, &player)
 	if err != nil {
 		panic(err)
