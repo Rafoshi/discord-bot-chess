@@ -1,6 +1,6 @@
 # Chess Discord Bot
 
-##Commands
+## Commands
 ```chess user <username>```
 ```chess help```
 <br>
